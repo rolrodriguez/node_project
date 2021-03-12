@@ -27,7 +27,7 @@ app.get('/getPerson/:id', (req, res) => {
 
   pool.connect((err, client, done) => {
     if (err) throw err
-    client.query('SELECT * FROM users WHERE id = $1', [id], (err, res) => {
+    client.query('SELECT * FROM person WHERE id = $1', [id], (err, res) => {
       done()
       if (err) {
         console.log(err.stack)
