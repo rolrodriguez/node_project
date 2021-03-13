@@ -89,6 +89,7 @@ CREATE TABLE unit_cost (
     id SERIAL PRIMARY KEY,
     ingredient_id int references ingredients(id),
     cost_per_uom_usd numeric NOT NULL,
+    uom_id int references UOM(id),
     created_on timestamp NOT NULL default NOW(),
     modified_on timestamp NOT NULL default NOW() 
 );
@@ -142,15 +143,15 @@ INSERT INTO products_categories (product_id, category_id)
 VALUES
 (
     (SELECT id from products WHERE name = 'chocolate chip cookies'), 
-    (SELECT id from category_id WHERE name = 'chocolate')
+    (SELECT id from categories WHERE name = 'chocolate')
 ), 
 (
     (SELECT id from products WHERE name = 'chocolate chip cookies'), 
-    (SELECT id from category_id WHERE name = 'cookies')
+    (SELECT id from categories WHERE name = 'cookies')
 ),
 (
     (SELECT id from products WHERE name = 'chocolate chip cookies'), 
-    (SELECT id from category_id WHERE name = 'sugar')
+    (SELECT id from categories WHERE name = 'sugar')
 );
 
 -- products_ingredients
@@ -165,7 +166,11 @@ VALUES
 ),
 (
     (SELECT id from products WHERE name = 'chocolate chip cookies'),
-    (SELECT id from ingredients WHERE name = 'unsalted butter'),
-    (SELECT id from uom WHERE name_single = 'tablespoon' ),
-    14.0
-)
+    (SELECT id from ingredients WHERE name = 'granulated sugar'),
+    (SELECT id from uom WHERE name_single = 'cup' ),
+    1.0
+);
+
+-- unit_cost
+
+
