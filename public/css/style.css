@@ -1,7 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&family=Raleway:wght@400;700&display=swap');
 :root{
   --colors-primary: navy;
+  --colors-secundary: #342dc4;
   --colors-focus: orange;
+  --colors-dark-gray: #4d4d4d;
 }
 
 html{
@@ -14,8 +16,6 @@ body{
   margin: inherit;
   padding: inherit;
   height: 100vh;
-  display: flex;
-  align-items: center;
   /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#362ecc+0,737096+0,000080+100 */
   background: #362ecc; /* Old browsers */
   background: -moz-linear-gradient(-45deg,  #362ecc 0%, #737096 0%, #000080 100%); /* FF3.6-15 */
@@ -67,11 +67,10 @@ form *{
   font-family: 'Open Sans', sans-serif;
 }
 .container{
-  max-width: 76rem;
+  max-width: 96rem;
   width: 95%;
-  margin: auto;
+  margin: 0 auto;
   border: 1px solid gray;
-  border-radius: 1rem;
   background-color: white;
 }
 
@@ -101,4 +100,133 @@ a:visited, a{
 }
 a:hover{
   color: var(--colors-focus);
+}
+
+#search{
+  border: none;
+  border-bottom: none;
+}
+
+.search-box{
+  padding: 1rem;
+  border: 1px solid gray;
+  text-align: center;
+  background-color: var(--colors-secundary);
+  color: white;
+}
+#search-submit{
+  padding: 0.5rem 0.3rem;
+  position: relative;
+  top: 2px;
+  background-color: white;
+  border: 1px solid var(--colors-primary);
+  color: var(--colors-primary)
+}
+
+.search-bar{
+  border: 1px solid gray;
+  width: inherit;
+  background-color: white;
+  display: inline;
+  padding: 0.7rem;
+  height: 100%;
+}
+#search:focus{
+  outline: none;
+}
+
+#search{
+  width: 40%;
+  height: 2rem;
+}
+
+.fa-search{
+  color: var(--colors-dark-gray);
+  font-size: 1.2rem;
+}
+
+.float-button{
+  position: fixed;
+  right: 4rem;
+  bottom: 4rem;
+
+}
+.round-btn{
+  background-color: var(--colors-secundary); 
+  color: white;
+  padding: 1.5rem 2rem;
+  border-radius: 2.5rem;
+  font-size: 2rem;
+  cursor: pointer;
+  user-select: none;
+}
+.round-btn:hover{
+  background-color: var(--colors-focus);
+}
+
+.report-button{
+  position: fixed;
+  right: 10rem;
+  bottom: 4rem;
+
+}
+
+.report-btn{
+  background-color: var(--colors-secundary); 
+  color: white;
+  padding: 1.8rem 1.8rem;
+  border-radius: 2.5rem;
+  font-size: 1.5rem;
+  cursor: pointer;
+  user-select: none;
+}
+.report-btn:hover{
+  background-color: var(--colors-focus);
+}
+
+main{
+  min-height: 680px;
+  margin: 0 15%;
+  overflow: hidden;
+}
+
+@media all and (max-width: 800px){
+  main{
+    margin: 5%;
+  }
+}
+#type{
+  padding: 0.25rem 0.5rem;
+  margin: 0 0.3rem;
+  align-items: center;
+  top: 0.5rem;
+}
+
+footer{
+  font-size: 1.6rem;
+  text-align: center;
+  background-color: var(--colors-secundary);
+  color: white;
+}
+
+.result-row{
+  display: flex;
+  font-size: 2.5rem;
+  padding: 1rem;
+  border: 1px solid var(--colors-dark-gray);
+  margin: 0.4rem 0;
+}
+
+.result-field{
+  padding: 1rem;
+}
+
+.result-id::before{
+  content: 'ID: ';
+  font-weight: bold;
+}
+
+.result-name::before{
+  content: 'Name: ';
+  font-weight: bold;
 }

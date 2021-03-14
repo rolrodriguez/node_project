@@ -4,26 +4,40 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>USPS Rate Calculator</title>
+  <title>Amai Bakery</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
   <div class="container">
-  <h1 class="center">USPS Rate Calculator</h1>
-    <form action="/getRate" method="GET">
-      <div id="inputElements">
-        <label for="weight">Weight not over (oz):</label>
-        <input type="number" name="weight" id="weight" step="0.1" required placeholder="YY.Y oz">
-        <label for="">Type of Mail: </label>
-        <select name="mail" id="mail">
-          <option value="letters_stamped">Letters - Stamped</option>
-          <option value="letters_metered">Letters - letters-metered</option>
-          <option value="large_envelopes_flats">Large envelopes - flats</option>
-          <option value="first_class_package_service">First Class Package Service - Parcels </option>
-        </select>
+  <h1 class="center">Amai Bakery</h1>
+    <div class="search-box">
+      <div class="search-bar">
+        <input type="text" name="title" id="search" autocomplete="off" placeholder="Search for ingredients or products">
+        <i class="search-icon fa fa-search"></i> 
       </div>
-      <input type="submit" value="Calculate">
-    </form>
+      <select name="type" id="type">
+        <option value="products" default>products</option>
+        <option value="ingredients">Ingredients</option>
+      </select>
+      <button id="search-submit">Search</button>
+    </div>
+    <main id="query-results">
+
+    </main>
+    <footer>
+      All rights reserved Amai Bakery RD
+    </footer>
+  </div>
+  <div class="report-button">
+    <div class="report-btn">
+      <i class="fa fa-bar-chart"></i>
+    </div>
+  </div>
+  <div class="float-button">
+    <div class="round-btn">
+      +
+    </div>
   </div>
 <script src="/js/main.js"></script>
 </body>

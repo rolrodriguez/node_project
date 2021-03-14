@@ -1,4 +1,5 @@
 const pool = require('./pool');
+const edaman = require('./edaman');
 const query = {}
 query.getIngredientsByProductId = (id, res) => {
     
@@ -41,6 +42,27 @@ query.getIngredientsByProductId = (id, res) => {
     })
 }
 
+query.getIngredientsById = (id, res, parent=null) =>{
+  pool.connect((err, client, done) => {
+      if (err) throw err
+      client.query('SELECT name from ingredients WHERE id = $1', [id],(err, result) => {
+        done();
+        if (err) {
+          console.log(err.stack)
+        } else {
+          if(parent){
+            parent.result.push(result.rows[0]);
+            return;
+          }
+          else{
+            res.json(result.rows[0]);
+            return;
+          }
+        }
+      })
+  })
+}
+
 query.searchProductsByName = (nameString, res) =>{
     pool.connect((err, client, done) => {
         if (err) throw err
@@ -73,6 +95,11 @@ query.searchIngredientsByName = (nameString, res) =>{
           }
         })
     })
+}
+
+// TODO
+query.getNutrients = (ingredientArray, res, jsonElem)=>{
+ edaman.query('2 lb of sugar', res);
 }
 
 module.exports = query;

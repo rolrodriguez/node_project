@@ -7,8 +7,6 @@
 // Express
 const express = require('express');
 
-const bodyParser = require('body-parser');
-
 // Express Routers
 const api = require('./controllers/api');
 const webapp = require('./controllers/webapp');
