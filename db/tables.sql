@@ -10,12 +10,6 @@
 
 CREATE DATABASE amai_bakery;
 
-
-
-
-
-
-
 drop table if exists unit_cost;
 drop table if exists products_ingredients;
 drop table if exists products_categories;
@@ -88,7 +82,7 @@ CREATE TABLE products_ingredients (
 CREATE TABLE unit_cost (
     id SERIAL PRIMARY KEY,
     ingredient_id int references ingredients(id),
-    cost_per_uom_usd numeric NOT NULL,
+    cost_usd_per_uom numeric NOT NULL,
     uom_id int references UOM(id),
     created_on timestamp NOT NULL default NOW(),
     modified_on timestamp NOT NULL default NOW() 
@@ -102,7 +96,7 @@ CREATE TABLE unit_cost (
 
  INSERT INTO uom (abbr, name_single, name_plural)
  VALUES 
- ('tsp', 'teaspoon', 'teaspoons'), ('tbsp','tablespoon', 'tablespoon'), 
+ ('tsp', 'teaspoon', 'teaspoons'), ('tbsp','tablespoon', 'tablespoons'), 
  ('ea', '', ''), ('c', 'cup', 'cups'), 
  ('pinch', 'pinch', 'pinches'),
  ('g', 'gram', 'grams');
@@ -173,4 +167,43 @@ VALUES
 
 -- unit_cost
 
+INSERT INTO unit_cost (ingredient_id, cost_usd_per_uom, uom_id)
+VALUES
+(
+    (SELECT id from ingredients WHERE name = 'unsalted butter'),
+    0.03,
+    (SELECT id from uom WHERE name_single = 'tablespoon' )
+),
+(
+    (SELECT id from ingredients WHERE name = 'granulated sugar'),
+    0.21,
+    (SELECT id from uom WHERE name_single = 'cup' )
+);
 
+-- queries
+
+-- /api/product/:id
+
+/* PRODUCTS
+SELECT id, name from product;
+*/
+
+/* INGREDIENTS
+SELECT ing.name "ingredient", pi.quantity "quantity", 
+CASE WHEN pi.quantity > 1.0 THEN u.name_plural ELSE u.name_single END "uom"
+FROM products p 
+JOIN products_ingredients pi ON p.id = pi.product_id 
+JOIN ingredients ing ON ing.id = pi.ingredient_id 
+JOIN uom u ON u.id = pi.uom_id
+WHERE p.id = 1;
+*/
+
+/* COMPLETE
+SELECT ing.name "ingredient", pi.quantity "quantity", 
+CASE WHEN pi.quantity > 1.0 THEN u.name_plural ELSE u.name_single END "uom"
+FROM products p 
+JOIN products_ingredients pi ON p.id = pi.product_id 
+JOIN ingredients ing ON ing.id = pi.ingredient_id 
+JOIN uom u ON u.id = pi.uom_id
+WHERE p.id = 1;
+*/

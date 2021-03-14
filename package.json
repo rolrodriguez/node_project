@@ -1,5 +1,5 @@
 {
-  "name": "Amai Bakery",
+  "name": "amai-bakery",
   "version": "1.0.0",
   "description": "Node App hosted on Heroku",
   "main": "app.js",

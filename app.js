@@ -7,6 +7,12 @@
 // Express
 const express = require('express');
 
+const bodyParser = require('body-parser');
+
+// Express Routers
+const api = require('./controllers/api');
+const webapp = require('./controllers/webapp');
+
 // Path
 const path = require('path');
 
@@ -15,9 +21,6 @@ const app = express();
 
 // Port
 const PORT = process.env.PORT || 5000;
-
-// Postgres pool
-const pool = require('./pool');
 
 // EXPRESS - Serve public files
 app.use(express.static(path.join(__dirname, 'public')));
@@ -28,11 +31,15 @@ app.set('views', path.join(__dirname, 'views'));
 // EXPRESS - Set ejs as view engine
 app.set('view engine', 'ejs');
 
-// EXPRESS - routes
+// EXPRESS - Use middleware parser for json request
+app.use(express.json());
 
-app.get('/', (req, res)=>{
-  res.sendFile(path.join(__dirname, 'static.html'));
-});
+// EXPRESS - Use middleware parser for form requests
+app.use(express.urlencoded({extended: false}));
+
+// EXPRESS - defining route controllers
+app.use('/', webapp);
+app.use('/api', api);
 
 // EXPRESS - Handle 404
 app.use(function(req, res) {
@@ -43,7 +50,7 @@ app.use(function(req, res) {
 app.use(function (err, req, res, next) {
   console.error(err.stack)
   res.status(500).send('Something broke!')
-})
+});
 
 // EXPRESS - Listen to a port
 app.listen(PORT, () => {
