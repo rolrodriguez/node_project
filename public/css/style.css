@@ -16,6 +16,7 @@ body{
   margin: inherit;
   padding: inherit;
   height: 100vh;
+  user-select: none;
   /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#362ecc+0,737096+0,000080+100 */
   background: #362ecc; /* Old browsers */
   background: -moz-linear-gradient(-45deg,  #362ecc 0%, #737096 0%, #000080 100%); /* FF3.6-15 */
@@ -79,6 +80,14 @@ h1{
   font-family: 'Raleway', sans-serif;
   font-weight: 700;
   color: var(--colors-primary);
+}
+
+h2{
+  font-size: 2.4rem;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 500;
+  color: var(--colors-primary);
+  text-align: center;
 }
 .result{
   text-align: center;
@@ -195,12 +204,7 @@ main{
     margin: 5%;
   }
 }
-#type{
-  padding: 0.25rem 0.5rem;
-  margin: 0 0.3rem;
-  align-items: center;
-  top: 0.5rem;
-}
+
 
 footer{
   font-size: 1.6rem;
@@ -222,11 +226,37 @@ footer{
 }
 
 .result-id::before{
-  content: 'ID: ';
+  content: '#';
   font-weight: bold;
 }
 
-.result-name::before{
-  content: 'Name: ';
-  font-weight: bold;
+.result-name{
+  user-select: none;
+  text-transform: capitalize;
+}
+.result-name:hover{
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.ingredient-row{
+  display: flex;
+  font-size: 1.8rem;
+  margin: 0 6rem;
+  border: 1px solid black;
+  margin-bottom: 0.5rem;
+  font-family: 'Open Sans', sans-serif;
+}
+.ingredient-row *{
+  margin: 0;
+  padding: 1rem;
+
+}
+
+.return-to-main{
+  text-align: center;
+  font-size: 1.6rem;
+  cursor: pointer;
+  text-decoration: underline;
+  margin: 2rem;
 }

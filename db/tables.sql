@@ -99,13 +99,15 @@ CREATE TABLE unit_cost (
  ('tsp', 'teaspoon', 'teaspoons'), ('tbsp','tablespoon', 'tablespoons'), 
  ('ea', '', ''), ('c', 'cup', 'cups'), 
  ('pinch', 'pinch', 'pinches'),
- ('g', 'gram', 'grams');
+ ('g', 'gram', 'grams'),
+ ('oz', 'ounce', 'ounces');
 
  -- ingredients
 
  INSERT INTO ingredients (name, description)
  VALUES
  ('unsalted butter', 'unsalted butter softened at room temperature'),
+ ('unsalted butter melted', 'unsalted butter melted'),
  ('granulated sugar', 'granulated sugar'),
  ('light brown sugar', 'light brown sugar'),
  ('egg', 'egg'),
@@ -113,7 +115,18 @@ CREATE TABLE unit_cost (
  ('all-purpose flour', 'all-purpose flour'),
  ('baking soda', 'baking soda'),
  ('salt', 'salt'),
- ('chocolate chips', 'chocolate chips');
+ ('chocolate chips', 'chocolate chips'),
+ ('graham crackers', 'graham crackers for cracker crumbs'),
+ ('ground pecans', 'ground pecans'),
+ ('cinnamon', 'cinnamon'),
+ ('cream cheese', 'cream cheese block'),
+ ('heavy cream', 'heavy cream'),
+ ('dark corn syrup', 'dark corn syrup'),
+ ('dashi powder', 'dashi powder'),
+ ('soy souce', 'soy souce'),
+ ('water', 'water'),
+ ('coriander', 'coriander'),
+ ('salted butter', 'salted butter');
 
  -- categories
 
@@ -121,15 +134,15 @@ CREATE TABLE unit_cost (
  VALUES
  ('cookies', 'sweet cookies'),
  ('chocolate', 'products with chocolate'),
- ('sugar', 'recipes with sugar added');
+ ('sugar', 'recipes with sugar added'),
+ ('pie', 'types of pies');
 
 -- products
 
 INSERT INTO products (name, description)
 VALUES
 ('chocolate chip cookies', 'chocolate chip cookies'),
-('pecan pie cheesecake', 'pecan pie cheesecake'),
-('tamagoyaki', 'tamagoyaki');
+('pecan pie cheesecake', 'pecan pie cheesecake');
 
 -- products_categories
 
@@ -146,6 +159,10 @@ VALUES
 (
     (SELECT id from products WHERE name = 'chocolate chip cookies'), 
     (SELECT id from categories WHERE name = 'sugar')
+),
+(
+    (SELECT id from products WHERE name = 'pecan pie cheesecake'), 
+    (SELECT id from categories WHERE name = 'pie')
 );
 
 -- products_ingredients
@@ -163,6 +180,150 @@ VALUES
     (SELECT id from ingredients WHERE name = 'granulated sugar'),
     (SELECT id from uom WHERE name_single = 'cup' ),
     1.0
+),
+(
+    (SELECT id from products WHERE name = 'chocolate chip cookies'),
+    (SELECT id from ingredients WHERE name = 'light brown sugar'),
+    (SELECT id from uom WHERE name_single = 'cup' ),
+    0.5
+),
+(
+    (SELECT id from products WHERE name = 'chocolate chip cookies'),
+    (SELECT id from ingredients WHERE name = 'egg'),
+    (SELECT id from uom WHERE abbr = 'ea' ),
+    2.0
+),
+(
+    (SELECT id from products WHERE name = 'chocolate chip cookies'),
+    (SELECT id from ingredients WHERE name = 'vanilla extract'),
+    (SELECT id from uom WHERE name_single = 'teaspoon' ),
+    1.0
+),
+(
+    (SELECT id from products WHERE name = 'chocolate chip cookies'),
+    (SELECT id from ingredients WHERE name = 'all-purpose flour'),
+    (SELECT id from uom WHERE name_single = 'cup' ),
+    2.5
+),
+(
+    (SELECT id from products WHERE name = 'chocolate chip cookies'),
+    (SELECT id from ingredients WHERE name = 'baking soda'),
+    (SELECT id from uom WHERE name_single = 'teaspoon' ),
+    0.5
+),
+(
+    (SELECT id from products WHERE name = 'chocolate chip cookies'),
+    (SELECT id from ingredients WHERE name = 'chocolate chips'),
+    (SELECT id from uom WHERE name_single = 'cup' ),
+    3.0
+),
+(
+    (SELECT id from products WHERE name = 'pecan pie cheesecake'),
+    (SELECT id from ingredients WHERE name = 'graham crackers'),
+    (SELECT id from uom WHERE abbr = 'ea' ),
+    6.0
+),
+(
+    (SELECT id from products WHERE name = 'pecan pie cheesecake'),
+    (SELECT id from ingredients WHERE name = 'ground pecans'),
+    (SELECT id from uom WHERE name_single = 'cup' ),
+    0.75
+),
+(
+    (SELECT id from products WHERE name = 'pecan pie cheesecake'),
+    (SELECT id from ingredients WHERE name = 'granulated sugar'),
+    (SELECT id from uom WHERE name_single = 'tablespoon' ),
+    3.0
+),
+(
+    (SELECT id from products WHERE name = 'pecan pie cheesecake'),
+    (SELECT id from ingredients WHERE name = 'unsalted butter melted'),
+    (SELECT id from uom WHERE name_single = 'cup' ),
+    0.5
+),
+(
+    (SELECT id from products WHERE name = 'pecan pie cheesecake'),
+    (SELECT id from ingredients WHERE name = 'salt'),
+    (SELECT id from uom WHERE name_single = 'teaspoon' ),
+    0.5
+),
+(
+    (SELECT id from products WHERE name = 'pecan pie cheesecake'),
+    (SELECT id from ingredients WHERE name = 'cinnamon'),
+    (SELECT id from uom WHERE name_single = 'teaspoon' ),
+    0.5
+),
+(
+    (SELECT id from products WHERE name = 'pecan pie cheesecake'),
+    (SELECT id from ingredients WHERE name = 'cream cheese'),
+    (SELECT id from uom WHERE name_single = 'ounce' ),
+    24.0
+),
+(
+    (SELECT id from products WHERE name = 'pecan pie cheesecake'),
+    (SELECT id from ingredients WHERE name = 'light brown sugar'),
+    (SELECT id from uom WHERE name_single = 'cup' ),
+    1.5
+),
+(
+    (SELECT id from products WHERE name = 'pecan pie cheesecake'),
+    (SELECT id from ingredients WHERE name = 'vanilla extract'),
+    (SELECT id from uom WHERE name_single = 'teaspoon' ),
+    2.0
+),
+(
+    (SELECT id from products WHERE name = 'pecan pie cheesecake'),
+    (SELECT id from ingredients WHERE name = 'salt'),
+    (SELECT id from uom WHERE name_single = 'teaspoon' ),
+    0.5
+),
+(
+    (SELECT id from products WHERE name = 'pecan pie cheesecake'),
+    (SELECT id from ingredients WHERE name = 'egg'),
+    (SELECT id from uom WHERE abbr = 'ea' ),
+    4.0
+),
+(
+    (SELECT id from products WHERE name = 'pecan pie cheesecake'),
+    (SELECT id from ingredients WHERE name = 'heavy cream'),
+    (SELECT id from uom WHERE name_single = 'cup' ),
+    0.5
+),
+(
+    (SELECT id from products WHERE name = 'pecan pie cheesecake'),
+    (SELECT id from ingredients WHERE name = 'ground pecans'),
+    (SELECT id from uom WHERE name_single = 'cup' ),
+    1.0
+),
+(
+    (SELECT id from products WHERE name = 'pecan pie cheesecake'),
+    (SELECT id from ingredients WHERE name = 'granulated sugar'),
+    (SELECT id from uom WHERE name_single = 'cup' ),
+    0.75
+),
+(
+    (SELECT id from products WHERE name = 'pecan pie cheesecake'),
+    (SELECT id from ingredients WHERE name = 'salted butter'),
+    (SELECT id from uom WHERE name_single = 'cup' ),
+    0.25
+),
+(
+    (SELECT id from products WHERE name = 'pecan pie cheesecake'),
+    (SELECT id from ingredients WHERE name = 'heavy cream'),
+    (SELECT id from uom WHERE name_single = 'cup' ),
+    0.5
+),
+(
+    (SELECT id from products WHERE name = 'pecan pie cheesecake'),
+    (SELECT id from ingredients WHERE name = 'dark corn syrup'),
+    (SELECT id from uom WHERE name_single = 'tablespoon' ),
+    1.0
+),
+(
+    (SELECT id from products WHERE name = 'pecan pie cheesecake'),
+    (SELECT id from ingredients WHERE name = 'vanilla extract'),
+    (SELECT id from uom WHERE name_single = 'teaspoon' ),
+    1.0
 );
 
 -- unit_cost
@@ -178,6 +339,81 @@ VALUES
     (SELECT id from ingredients WHERE name = 'granulated sugar'),
     0.21,
     (SELECT id from uom WHERE name_single = 'cup' )
+),
+(
+    (SELECT id from ingredients WHERE name = 'light brown sugar'),
+    0.30,
+    (SELECT id from uom WHERE name_single = 'cup' )
+),
+(
+    (SELECT id from ingredients WHERE name = 'egg'),
+    0.08,
+    (SELECT id from uom WHERE abbr = 'ea' )
+),
+(
+    (SELECT id from ingredients WHERE name = 'vanilla extract'),
+    0.04,
+    (SELECT id from uom WHERE name_single = 'teaspoon' )
+),
+(
+    (SELECT id from ingredients WHERE name = 'baking soda'),
+    0.007,
+    (SELECT id from uom WHERE name_single = 'teaspoon' )
+),
+(
+    (SELECT id from ingredients WHERE name = 'salt'),
+    0.004,
+    (SELECT id from uom WHERE name_single = 'teaspoon' )
+),
+(
+    (SELECT id from ingredients WHERE name = 'chocolate chips'),
+    1.10,
+    (SELECT id from uom WHERE name_single = 'cup' )
+),
+(
+    (SELECT id from ingredients WHERE name = 'graham crackers'),
+    0.18,
+    (SELECT id from uom WHERE abbr = 'ea' )
+),
+(
+    (SELECT id from ingredients WHERE name = 'ground pecans'),
+    0.45,
+    (SELECT id from uom WHERE name_single = 'cup' )
+),
+(
+    (SELECT id from ingredients WHERE name = 'granulated sugar'),
+    0.04,
+    (SELECT id from uom WHERE name_single = 'tablespoon' )
+),
+(
+    (SELECT id from ingredients WHERE name = 'unsalted butter'),
+    0.50,
+    (SELECT id from uom WHERE name_single = 'cup' )
+),
+(
+    (SELECT id from ingredients WHERE name = 'cinnamon'),
+    0.06,
+    (SELECT id from uom WHERE name_single = 'teaspoon' )
+), 
+(
+    (SELECT id from ingredients WHERE name = 'cream cheese'),
+    0.82,
+    (SELECT id from uom WHERE name_single = 'ounce' )
+),
+(
+    (SELECT id from ingredients WHERE name = 'heavy cream'),
+    5.92,
+    (SELECT id from uom WHERE name_single = 'cup' )
+),
+(
+    (SELECT id from ingredients WHERE name = 'salted butter'),
+    0.52,
+    (SELECT id from uom WHERE name_single = 'cup' )
+),
+(
+    (SELECT id from ingredients WHERE name = 'dark corn syrup'),
+    0.06,
+    (SELECT id from uom WHERE name_single = 'tablespoon' )
 );
 
 -- queries

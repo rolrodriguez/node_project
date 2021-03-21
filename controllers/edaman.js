@@ -7,12 +7,12 @@ const http = require("https");
 const edaman = {}
 
 
-edaman.query = (searchQuery, response, parent=null)=>{
+edaman.queryIngredient = (searchQuery, parent=null)=>{
     const options = {
         "method": "GET",
         "hostname": process.env.EDAMAN_HOST,
         "port": null,
-        "path": '/parser?ingr='+encodeURIComponent(searchQuery),
+        "path": '/api/nutrition-data?ingr='+encodeURIComponent(searchQuery),
         "headers": {
             "x-rapidapi-key": process.env.EDAMAN_X_RAPID_API_KEY,
             "x-rapidapi-host": process.env.EDAMAN_HOST,
