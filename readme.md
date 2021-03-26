@@ -6,7 +6,7 @@ This project will store ingredients in Amai Bakery's recipes to provide nutritio
 # TODO list
 
 ## Add lightbox to present the nutrient report and the dialog to add new ingredients -- DONE
-## Add pictures to each recipe
+## Add pictures to each recipe --DONE
 ## USE the API to retrieve the nutritional info of a recipe.
 ## Use local storage to store recipe JSON and add user modifications
 ## Add workflow to create new recipes

@@ -155,8 +155,17 @@ query.getIngredientById = (id) =>{
 }
 
 // TODO
-query.getNutrients = (ingredientArray, res, jsonElem)=>{
- edaman.query('2 lb of sugar', res);
+query.getNutrients = async (ingredientArray, res, jsonElem)=>{
+ //edaman.query('2 lb of sugar', res);
+ let test = {
+  "title": "recipe",
+  "ingr": [
+      "14 tablespoons unsalted butter softened",
+      "1 cup granulated sugar"
+  ]
+}
+ let response = await edaman.queryRecipePromise(JSON.stringify(test));
+ console.log(response);
 }
 
 module.exports = query;

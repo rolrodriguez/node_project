@@ -6,41 +6,68 @@ require('dotenv').config();
 const http = require("https");
 const edaman = {}
 
-
-edaman.queryIngredient = (searchQuery, parent=null)=>{
+edaman.queryRecipe = (recipeJSONText)=>{
     const options = {
-        "method": "GET",
-        "hostname": process.env.EDAMAN_HOST,
-        "port": null,
-        "path": '/api/nutrition-data?ingr='+encodeURIComponent(searchQuery),
-        "headers": {
-            "x-rapidapi-key": process.env.EDAMAN_X_RAPID_API_KEY,
-            "x-rapidapi-host": process.env.EDAMAN_HOST,
-            "useQueryString": true
+        hostname: process.env.EDAMAN_HOST,
+        port: 443,
+        path: `/api/nutrition-details?app_id=${process.env.EDAMAN_TEST_ID}&app_key=${process.env.EDAMAN_TEST_KEY}`,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Content-Length': recipeJSONText.length
         }
-    };
-    const req = http.request(options, function (res) {
-        const chunks = [];
-    
-        res.on("data", function (chunk) {
-            chunks.push(chunk);
+      }
+      const req = http.request(options, res => {
+        let chunks = '';
+        console.log(`statusCode: ${res.statusCode}`)
+        
+        res.on('data', data => {
+          chunks += data;
         });
-    
-        res.on("end", function () {
-            const body = Buffer.concat(chunks);
-            if(parent){
-                parent.result.push(body);
-                return;
+        res.on('end', ()=>{
+            console.log(JSON.parse(chunks));
+        });
+      });
+      
+      req.on('error', error => {
+        console.error(error)
+      });
+      
+      req.write(recipeJSONText)
+      req.end()
+}
+
+edaman.queryRecipePromise = (recipeJSONText)=>{
+    return new Promise((resolve, reject)=>{
+        const options = {
+            hostname: process.env.EDAMAN_HOST,
+            port: 443,
+            path: `/api/nutrition-details?app_id=${process.env.EDAMAN_TEST_ID}&app_key=${process.env.EDAMAN_TEST_KEY}`,
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Content-Length': recipeJSONText.length
             }
-            else{
-                const parsed = JSON.parse(body.toString()).parsed;
-                response.json(parsed[0].food.nutrients);
-            }
+        }
+         const req = http.request(options, res => {
+            let chunks = '';
+            console.log(`statusCode: ${res.statusCode}`)
             
-        });
+            res.on('data', data => {
+              chunks += data;
+            });
+            res.on('end', ()=>{
+                resolve(JSON.parse(chunks));
+            });
+          });
+          
+          req.on('error', error => {
+            reject(error)
+          });
+          
+          req.write(recipeJSONText)
+          req.end()
     });
-    
-    req.end();
 }
 
 module.exports = edaman;

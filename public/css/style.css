@@ -237,6 +237,9 @@ footer{
 .result-name{
   user-select: none;
   text-transform: capitalize;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 500;
+  color: var(--colors-primary);
 }
 .result-name:hover{
   cursor: pointer;
