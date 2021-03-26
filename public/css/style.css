@@ -75,6 +75,12 @@ form *{
   background-color: white;
 }
 
+a:visited, a{
+  text-decoration: none;
+  color: var(--colors-primary);
+  font-size: 2rem;
+}
+
 h1{
   font-size: 2.8rem;
   font-family: 'Raleway', sans-serif;
@@ -102,14 +108,7 @@ h2{
   font-size: 4.5rem;
   color: var(--colors-primary);
 }
-a:visited, a{
-  text-decoration: none;
-  color: var(--colors-primary);
-  font-size: 2rem;
-}
-a:hover{
-  color: var(--colors-focus);
-}
+
 
 #search{
   border: none;
@@ -225,6 +224,11 @@ footer{
   padding: 1rem;
 }
 
+.result-img{
+  width: 120px;
+  height: 120px;
+}
+
 .result-id::before{
   content: '#';
   font-weight: bold;
@@ -253,10 +257,26 @@ footer{
 
 }
 
+.ingredient-row:hover{
+  background-color: #6e68e2;
+  color: white;
+}
+
 .return-to-main{
   text-align: center;
   font-size: 1.6rem;
   cursor: pointer;
   text-decoration: underline;
   margin: 2rem;
+}
+
+.slbContent{
+  width: 50vw;
+  padding: 3rem;
+}
+@media all and (max-width: 800px){
+  .slbContent{
+    width: 80vw;
+    margin: 1rem;
+  }
 }

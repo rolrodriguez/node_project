@@ -5,7 +5,7 @@ query.getProductById = (id) => {
   return new Promise((resolve, reject)=>{
     pool.connect((err, client, done) => {
       if (err) throw err
-      client.query('SELECT id, name from products WHERE id = $1', [id],(err, result) => {
+      client.query('SELECT id, name, image from products WHERE id = $1', [id],(err, result) => {
         done();
         if (err) {
           reject(err.stack);
@@ -47,11 +47,11 @@ query.getProductById = (id) => {
 }
 
 
-query.getLatestProducts = (number) => {
+query.getLatestProducts = (number) => {    
   return new Promise((resolve, reject)=>{
     pool.connect((err, client, done) => {
       if (err) throw err
-      client.query('SELECT id, name from products ORDER BY created_on DESC LIMIT $1', [number], async (err, result) => {
+      client.query('SELECT id, name, image from products ORDER BY created_on DESC LIMIT $1', [number], async (err, result) => {
         done();
         if (err) {
           reject(err.stack);
@@ -104,7 +104,7 @@ query.searchProductsByName = (nameString) =>{
   return new Promise((resolve, reject)=>{
       pool.connect((err, client, done) => {
         if (err) throw err
-        client.query('SELECT id, name from products WHERE name LIKE $1::text', [`%${nameString}%`],(err, result) => {
+        client.query('SELECT id, name, image from products WHERE name LIKE $1::text', [`%${nameString}%`],(err, result) => {
           done();
           if (err) {
             reject(err.stack);

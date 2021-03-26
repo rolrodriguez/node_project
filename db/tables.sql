@@ -55,6 +55,7 @@ CREATE TABLE products (
     id SERIAL PRIMARY KEY,
     name varchar(255) NOT NULL,
     description text NOT NULL,
+    image varchar(255),
     created_on timestamp NOT NULL default NOW(),
     modified_on timestamp NOT NULL default NOW() 
 );
@@ -139,10 +140,10 @@ CREATE TABLE unit_cost (
 
 -- products
 
-INSERT INTO products (name, description)
+INSERT INTO products (name, description, image)
 VALUES
-('chocolate chip cookies', 'chocolate chip cookies'),
-('pecan pie cheesecake', 'pecan pie cheesecake');
+('chocolate chip cookies', 'chocolate chip cookies', 'chocolate chip cookies.jpg'),
+('pecan pie cheesecake', 'pecan pie cheesecake', 'pecan pie cheesecake.jpg');
 
 -- products_categories
 
