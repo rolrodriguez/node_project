@@ -2,6 +2,7 @@ const { json } = require('express');
 const express = require('express');
 const router = express.Router();
 const query = require('./queries');
+const edaman = require('./edaman');
 router.get('/product/:id', async (req, res)=>{
     try {
         const id = req.params.id;
@@ -53,13 +54,42 @@ router.get('/ingredient/:id', async (req, res)=>{
     }
 });
 
-router.post('/ingredients/', (req, res) => {
+router.get('/ingredients/', async (req, res)=>{
     try {
-        const postRequest = req.body.request;
+       
+        const result = await query.getIngredients();
+        res.json(result);
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+router.get('/uoms/', async (req, res)=>{
+    try {
+       
+        const result = await query.getUOMs();
+        res.json(result);
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+router.get('/uom/:id', async (req, res)=>{
+    try {
+        const id = req.params.id;
+        const result = await query.getUOMById(id);
+        res.json(result);
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+router.post('/recipe/', async (req, res) => {
+    try {
+        const postRequest = JSON.stringify(req.body);
         if(postRequest){
-            var jsonElem = {}
-            jsonElem.request = postRequest;
-            query.getNutrients(postRequest, res)
+            let edamanRes = await edaman.queryRecipe(postRequest);
+            res.json(edamanRes);
         }
         else{
             res.json({"message": "request was empty"})

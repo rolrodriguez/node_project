@@ -18,10 +18,10 @@
   <a href="/"><h1 class="center">Amai Bakery - Nutrition Wizard</h1></a>
     <div class="search-box">
       <div class="search-bar">
-        <input type="text" name="title" id="search" autocomplete="off" placeholder="Search for a base product to start">
+        <input type="text" name="title" class="search" id="search" autocomplete="off" placeholder="Search for a base product to start">
         <i class="search-icon fa fa-search"></i> 
       </div>
-      <button id="search-submit">Search</button>
+      <button class="search-submit" id="search-submit">Search</button>
     </div>
     <main id="query-results">
 
@@ -30,19 +30,21 @@
       All rights reserved Amai Bakery RD
     </footer>
   </div>
-  <div class="report-button">
+  <div class="report-button main-button">
     <div class="report-btn">
       <i class="fa fa-bar-chart"></i>
     </div>
   </div>
-  <div class="float-button">
+  <div class="float-button main-button">
     <div class="round-btn">
       +
     </div>
   </div>
   <!-- Simple Lightbox -->
 <script src="/js/simpleLightbox.min.js"></script>
+<!-- Sweet alert -->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <!-- Site scripts -->
-<script src="/js/main.js"></script>
+<script type="module" src="/js/main.js"></script>
 </body>
 </html>

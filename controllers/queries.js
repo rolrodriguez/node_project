@@ -1,5 +1,4 @@
 const pool = require('./pool');
-const edaman = require('./edaman');
 const query = {}
 query.getProductById = (id) => {
   return new Promise((resolve, reject)=>{
@@ -154,18 +153,56 @@ query.getIngredientById = (id) =>{
   })
 }
 
-// TODO
-query.getNutrients = async (ingredientArray, res, jsonElem)=>{
- //edaman.query('2 lb of sugar', res);
- let test = {
-  "title": "recipe",
-  "ingr": [
-      "14 tablespoons unsalted butter softened",
-      "1 cup granulated sugar"
-  ]
+query.getIngredients = () =>{
+  return new Promise((resolve, reject)=>{
+    pool.connect((err, client, done)=>{
+      if(err) throw err
+      client.query('SELECT id, name from ingredients', [],(err, result) => {
+        done();
+        if (err) {
+          reject(err.stack);
+        } else {
+          var product = {}
+          product.results = result.rows;  
+          resolve(product);
+        }
+      })
+    })
+  })
 }
- let response = await edaman.queryRecipePromise(JSON.stringify(test));
- console.log(response);
+
+query.getUOMs = () =>{
+  return new Promise((resolve, reject)=>{
+    pool.connect((err, client, done)=>{
+      if(err) throw err
+      client.query('SELECT id, abbr, name_single, name_plural from uom', [],(err, result) => {
+        done();
+        if (err) {
+          reject(err.stack);
+        } else {
+          var product = {}
+          product = result.rows;  
+          resolve(product);
+        }
+      })
+    })
+  })
+}
+
+query.getUOMById = (id) =>{
+  return new Promise((resolve, reject)=>{
+    pool.connect((err, client, done)=>{
+      if(err) throw err
+      client.query('SELECT id, abbr, name_single, name_plural from uom WHERE id = $1', [id],(err, result) => {
+        done();
+        if (err) {
+          reject(err.stack);
+        } else { 
+          resolve(result.rows[0]);
+        }
+      })
+    })
+  })
 }
 
 module.exports = query;

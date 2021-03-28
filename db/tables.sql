@@ -111,7 +111,7 @@ CREATE TABLE unit_cost (
  ('unsalted butter melted', 'unsalted butter melted'),
  ('granulated sugar', 'granulated sugar'),
  ('light brown sugar', 'light brown sugar'),
- ('egg', 'egg'),
+ ('egg(s)', 'egg(s)'),
  ('vanilla extract', 'vanilla extract'),
  ('all-purpose flour', 'all-purpose flour'),
  ('baking soda', 'baking soda'),
