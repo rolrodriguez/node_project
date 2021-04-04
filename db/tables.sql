@@ -17,6 +17,26 @@ drop table if exists products;
 drop table if exists ingredients;
 drop table if exists categories;
 drop table if exists uom;
+drop table if exists users; 
+
+-- Add uuid extension to generate user IDs
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+-- Add extension to hash passwords
+
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
+-- Users table
+
+CREATE TABLE users (
+    id uuid DEFAULT uuid_generate_v1 () PRIMARY KEY,
+    username varchar(255) NOT NULL,
+    password varchar(255) NOT NULL,
+    created_on timestamp NOT NULL default NOW(),
+    modified_on timestamp NOT NULL default NOW() 
+);
+
 
 -- Units of Measure table (UOM)
 
@@ -92,6 +112,11 @@ CREATE TABLE unit_cost (
 /**
  * STATEMENTS TO POPULATE DATABASE
  */
+
+ -- Create a default user admin user
+
+ INSERT INTO users (username, password)
+ VALUES ('admin', crypt('admin', gen_salt('bf', 8)));
 
  -- UOM
 

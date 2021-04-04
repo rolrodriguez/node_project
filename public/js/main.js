@@ -2,7 +2,6 @@ import lib from './lib.js';
 
 // Main elements to interact with
 let searchButton = document.querySelector('#search-submit');
-// let queryResults = document.querySelector('#query-results');
 let newIngredientBtn = document.querySelector('.round-btn');
 let showReportBtn = document.querySelector('.report-btn');
 const AMAI_LS_INDEX = 'amai_recipe';
@@ -103,13 +102,13 @@ newIngredientBtn.onclick = async () =>{
       uom = uomJSON['name_plural'];
     }
     else{
-      uom = uomJSON['name_single'];
+       uom = uomJSON['name_single'];
     }
     if (uom === ''){
-      string = quantity + ' ' + uom + ' ' + name; 
+      string = quantity + ' ' + name; 
     }
     else{
-      string = quantity + ' ' + name; 
+       string = quantity + ' ' + uom + ' ' + name; 
     }
     let json = lib.readJsonFromLS(AMAI_LS_INDEX);
     console.log(json);
@@ -120,7 +119,6 @@ newIngredientBtn.onclick = async () =>{
       lb_ingr.value=''
       lb_ingr.innerText=''
     }
-
   }
 
 
@@ -130,11 +128,16 @@ showReportBtn.onclick = async () =>{
   let json = lib.readJsonFromLS(AMAI_LS_INDEX);
   let edamanJSON = amaiToEdamanJSON(json);
   console.log(edamanJSON);
-  let html = await lib.postToAPI('/api/recipe/', edamanJSON);
-  SimpleLightbox.open({
+  try {
+    let html = await lib.postToAPI('/api/recipe/', edamanJSON);
+    SimpleLightbox.open({
     content: getNutritionalInfoView(edamanJSON.title, html),
     elementClass: 'slbContentEl'
   });
+  } catch (error) {
+    console.error(error);
+  }
+  
 }
 
 /**

@@ -1,15 +1,20 @@
 /**
  * Amai bakery menu app file
  * 
- * 
+ * @author Rolando Rodriguez
  */
 
 // Express
 const express = require('express');
+const session = require('express-session');
+
+// Morgan
+const morgan = require('morgan');
 
 // Express Routers
 const api = require('./controllers/api');
 const webapp = require('./controllers/webapp');
+// const admin = require('./controllers/admin');
 
 // Path
 const path = require('path');
@@ -23,6 +28,13 @@ const PORT = process.env.PORT || 5000;
 // EXPRESS - Serve public files
 app.use(express.static(path.join(__dirname, 'public')));
 
+// EXPRESS - sessions
+app.use(session({
+  saveUninitialized: false,
+  resave: false,
+  secret: process.env.SECRET
+}));
+
 // EXPRESS - Set views for view engine
 app.set('views', path.join(__dirname, 'views'));
 
@@ -34,6 +46,9 @@ app.use(express.json());
 
 // EXPRESS - Use middleware parser for form requests
 app.use(express.urlencoded({extended: false}));
+
+// MORGAN - logger middleware
+app.use(morgan('tiny'));
 
 // EXPRESS - defining route controllers
 app.use('/', webapp);

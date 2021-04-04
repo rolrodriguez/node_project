@@ -1,4 +1,3 @@
-const { json } = require('express');
 const express = require('express');
 const router = express.Router();
 const query = require('./queries');
@@ -11,6 +10,21 @@ router.get('/product/:id', async (req, res)=>{
     } catch (error) {
         console.error(error);
     } 
+});
+
+router.delete('/product/:id', async (req, res)=>{
+    try{
+        const id = req.params.id;
+        const result = await query.deleteProduct(id);
+        if (result.rowCount != 0){
+            res.json({message: "resource deleted"});    
+        }
+        else{
+            res.json({message: "resource was not found"});  
+        }
+    }catch(error){
+        console.error(error);
+    }
 });
 
 router.get('/products/', async (req, res) =>{
@@ -64,9 +78,69 @@ router.get('/ingredients/', async (req, res)=>{
     }
 });
 
+router.post('/ingredient/', async (req, res)=>{
+    try {
+        const name = req.body.name;
+        const description = req.body.description
+        const result = await query.createIngredient(name, description);
+        if(result){
+            res.json(req.body);
+        }
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+router.put('/ingredient/:id', async (req, res)=>{
+    try{
+        const id = req.params.id;
+        const name = req.body.name;
+        const description = req.body.description;
+        const result = await query.updateIngredient(id, name, description);
+        if (result){
+            res.json(req.body);    
+        }
+        else{
+            res.json({message: "resource was not found"});  
+        }
+        
+    }catch(error){
+        console.error(error);
+    }
+});
+
+router.delete('/ingredient/:id', async (req, res)=>{
+    try{
+        const id = req.params.id;
+        const result = await query.deleteIngredient(id);
+        if (result.rowCount != 0){
+            res.json({message: "resource deleted"});    
+        }
+        else{
+            res.json({message: "resource was not found"});  
+        }
+        
+    }catch(error){
+        console.error(error);
+    }
+});
+
+router.post('/uom/', async (req, res)=>{
+    try {
+        const abbr = req.body.abbr;
+        const name_single = req.body.name_single;
+        const name_plural = req.body.name_plural;
+        const result = await query.createUOM(abbr, name_single, name_plural);
+        if(result){
+            res.json(req.body);
+        }
+    } catch (error) {
+        console.error(error);
+    }
+});
+
 router.get('/uoms/', async (req, res)=>{
     try {
-       
         const result = await query.getUOMs();
         res.json(result);
     } catch (error) {
@@ -78,8 +152,48 @@ router.get('/uom/:id', async (req, res)=>{
     try {
         const id = req.params.id;
         const result = await query.getUOMById(id);
-        res.json(result);
+        if(result){
+            res.json(result);
+        }
+        else{
+            res.json({message: "id not found"});
+        }
+        
     } catch (error) {
+        console.error(error);
+    }
+});
+
+router.put('/uom/:id', async (req, res)=>{
+    try {
+        const id = req.params.id;
+        const abbr = req.body.abbr;
+        const name_single = req.body.name_single;
+        const name_plural = req.body.name_plural;
+        const result = await query.updateUOM(id, abbr, name_single, name_plural);
+        if(result){
+            res.json({id, abbr, name_single, name_plural});
+        }
+        else{
+            res.json({message: "id not found"});
+        }
+        
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+router.delete('/uom/:id', async (req, res)=>{
+    try{
+        const id = req.params.id;
+        const result = await query.deleteUOM(id);
+        if (result.rowCount != 0){
+            res.json({message: "resource deleted"});    
+        }
+        else{
+            res.json({message: "resource was not found"});  
+        }
+    }catch(error){
         console.error(error);
     }
 });

@@ -1,5 +1,43 @@
 const pool = require('./pool');
 const query = {}
+
+query.psqlQuery = (stmt, elems) =>{
+  return new Promise((resolve, reject)=>{
+    pool.connect((err, client, done)=>{
+      if(err) throw err;
+      client.query(stmt, elems, (err, result)=>{
+        done();
+        if (err){
+          reject(err.stack);
+        }
+        else{
+          resolve(result);
+        }
+      });
+    });
+  });
+}
+
+query.userIdExists = (userID) =>{
+  return new Promise((resolve, reject)=>{
+    try{
+      query.psqlQuery('SELECT username FROM users WHERE id = $1', [userID])
+      .then(result=>{
+        if(result.rowCount != 0){
+          resolve(true);
+        }
+        else{
+          resolve(false);
+        }
+      });
+    }
+    catch(err){
+      reject(err);
+    }
+  })
+  
+}
+
 query.getProductById = (id) => {
   return new Promise((resolve, reject)=>{
     pool.connect((err, client, done) => {
@@ -122,7 +160,7 @@ query.searchIngredientsByName = (nameString) =>{
   return new Promise((resolve, reject)=>{
     pool.connect((err, client, done)=>{
       if(err) throw err
-      client.query('SELECT id, name from ingredients WHERE name LIKE $1::text', [`%${nameString}%`],(err, result) => {
+      client.query('SELECT id, name, description from ingredients WHERE name LIKE $1::text', [`%${nameString}%`],(err, result) => {
         done();
         if (err) {
           reject(err.stack);
@@ -141,7 +179,7 @@ query.getIngredientById = (id) =>{
   return new Promise((resolve, reject)=>{
     pool.connect((err, client, done)=>{
       if(err) throw err
-      client.query('SELECT id, name from ingredients WHERE id = $1', [id],(err, result) => {
+      client.query('SELECT id, name, description from ingredients WHERE id = $1', [id],(err, result) => {
         done();
         if (err) {
           reject(err.stack);
@@ -157,7 +195,7 @@ query.getIngredients = () =>{
   return new Promise((resolve, reject)=>{
     pool.connect((err, client, done)=>{
       if(err) throw err
-      client.query('SELECT id, name from ingredients', [],(err, result) => {
+      client.query('SELECT id, name, description from ingredients', [],(err, result) => {
         done();
         if (err) {
           reject(err.stack);
@@ -203,6 +241,85 @@ query.getUOMById = (id) =>{
       })
     })
   })
+}
+
+query.deleteIngredient = (id)=>{
+  return new Promise((resolve, reject)=>{
+    query.psqlQuery('DELETE FROM products_ingredients WHERE ingredient_id = $1', [id])
+    .then((result1)=>{
+      query.psqlQuery('DELETE FROM unit_cost WHERE ingredient_id = $1', [id])
+      .then((result2)=>{
+        query.psqlQuery('DELETE FROM ingredients WHERE id = $1', [id])
+        .then((result3)=>{
+          resolve(result3);
+        })
+      }).catch((error)=>{ reject(error)});
+    }).catch((error)=>{ reject(error); });
+  })
+}
+
+query.deleteProduct = (id)=>{
+  return new Promise((resolve, reject)=>{
+    query.psqlQuery('DELETE FROM products_ingredients WHERE product_id = $1', [id])
+    .then((result1)=>{
+      query.psqlQuery('DELETE FROM products_categories WHERE product_id = $1', [id])
+      .then((result2)=>{
+        query.psqlQuery('DELETE FROM products WHERE id = $1', [id])
+        .then((result3)=>{
+          resolve(result3);
+        })
+      }).catch((error)=>{ reject(error)});
+    }).catch((error)=>{ reject(error); });
+  })
+}
+
+query.deleteUOM = (id)=>{
+  return new Promise((resolve, reject)=>{
+    query.psqlQuery('DELETE FROM unit_cost WHERE uom_id = $1', [id])
+    .then((result1)=>{
+      query.psqlQuery('DELETE FROM products_ingredients WHERE uom_id = $1', [id])
+      .then((result2)=>{
+        query.psqlQuery('DELETE FROM uom WHERE id = $1', [id])
+        .then((result3)=>{
+          resolve(result3);
+        })
+      }).catch((error)=>{ reject(error)});
+    }).catch((error)=>{ reject(error); });
+  })
+}
+
+query.createUOM = (abbr, name_single, name_plural)=>{
+  return new Promise((resolve, reject)=>{
+    query.psqlQuery(`INSERT INTO uom (abbr, name_single, name_plural) VALUES ($1, $2, $3)`, [abbr, name_single, name_plural])
+    .then(result=>{resolve(result)})
+    .catch((error)=>{reject(error)});
+  });
+}
+
+query.createIngredient = (name, description)=>{
+  return new Promise((resolve, reject)=>{
+    query.psqlQuery(`INSERT INTO ingredients (name, description) VALUES ($1, $2)`, [name, description])
+    .then(result=>{resolve(result)})
+    .catch((error)=>{reject(error)});
+  });
+}
+
+query.updateUOM = (id, abbr, name_single, name_plural)=>{
+  return new Promise((resolve, reject)=>{
+    query.psqlQuery(`UPDATE uom SET abbr = $2, name_single = $3, name_plural = $4, modified_on = NOW() WHERE id = $1`, [id, abbr, name_single, name_plural])
+    .then(result=>{resolve(result)})
+    .catch((error)=>{reject(error)});
+  });
+}
+
+
+
+query.updateIngredient = (id, name, description)=>{
+  return new Promise((resolve, reject)=>{
+    query.psqlQuery(`UPDATE ingredients SET name = $2, description = $3,  modified_on = NOW() WHERE id = $1`, [id, name, description])
+    .then(result=>{resolve(result)})
+    .catch((error)=>{reject(error)});
+  });
 }
 
 module.exports = query;
