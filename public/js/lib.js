@@ -70,7 +70,7 @@ lib.readJsonFromLS = (key)=>{
     
   }
 
-  lib.postToAPI = (endpoint, JSONBody, callback=null)=>{
+ lib.postToAPI = (endpoint, JSONBody, callback=null)=>{
     return new Promise((resolve, reject)=>{
    
       let apiEndpoint = endpoint;
@@ -99,5 +99,60 @@ lib.readJsonFromLS = (key)=>{
 
   });
   }
+
+ lib.deleteFromAPI = (endpoint, callback=null)=>{
+    return new Promise((resolve, reject)=>{
+   
+      let apiEndpoint = endpoint;
+      let options = {
+        method: "DELETE",
+      }
+      
+      fetch(apiEndpoint, options).then(result =>{
+        return result.json();
+      }).then(json=>{
+        if (callback){
+          callback(json)
+          resolve(true);
+        }
+        else{
+          resolve(json);
+        }
+      }).catch(err=>{
+        reject(err);
+      });
+  });
+  }
+
+ lib.putToAPI = (endpoint, JSONBody, callback=null)=>{
+    return new Promise((resolve, reject)=>{
+   
+      let apiEndpoint = endpoint;
+      let options = {
+        method: "PUT",
+        body: JSON.stringify(JSONBody),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8"
+        }
+      }
+      
+      fetch(apiEndpoint, options).then(result =>{
+        return result.json();
+      }).then(json=>{
+        if (callback){
+          callback(json)
+          resolve(true);
+        }
+        else{
+          resolve(json);
+        }
+      }).catch(err=>{
+        reject(err);
+      });
+
+
+  });
+  }
+
 
 export default lib;

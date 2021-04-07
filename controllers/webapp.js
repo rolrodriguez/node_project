@@ -31,7 +31,7 @@ router.post('/login', (req, res)=>{
                     res.redirect('/admin');
                 }
                 else{
-                    res.send('NOT LOGGED!');
+                    res.redirect('/login');
                 }
             });
           }

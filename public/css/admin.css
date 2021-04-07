@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&family=Raleway:wght@400;700&display=swap');
+:root{
+  --colors-primary: navy;
+  --colors-secundary: #342dc4;
+  --colors-focus: orange;
+  --colors-dark-gray: #4d4d4d;
+}
+
+html{
+    font-size: 62.5%;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.float-button{
+    position: fixed;
+    right: 4rem;
+    bottom: 4rem;
+    display: none;
+}
+.round-btn{
+   background-color: var(--colors-secundary); 
+   color: white;
+   padding: 1.5rem 2rem;
+   border-radius: 2.5rem;
+   font-size: 2rem;
+   cursor: pointer;
+   user-select: none;
+}
+.round-btn:hover{
+  background-color: var(--colors-focus);
+}

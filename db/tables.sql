@@ -8,7 +8,7 @@
  * DATABASE AND TABLE CREATION
  */
 
-CREATE DATABASE amai_bakery;
+--CREATE DATABASE amai_bakery;
 
 drop table if exists unit_cost;
 drop table if exists products_ingredients;
@@ -114,6 +114,7 @@ CREATE TABLE unit_cost (
  */
 
  -- Create a default user admin user
+ -- use bcrypt for password hashing
 
  INSERT INTO users (username, password)
  VALUES ('admin', crypt('admin', gen_salt('bf', 8)));
@@ -442,30 +443,3 @@ VALUES
     (SELECT id from uom WHERE name_single = 'tablespoon' )
 );
 
--- queries
-
--- /api/product/:id
-
-/* PRODUCTS
-SELECT id, name from product;
-*/
-
-/* INGREDIENTS
-SELECT ing.name "ingredient", pi.quantity "quantity", 
-CASE WHEN pi.quantity > 1.0 THEN u.name_plural ELSE u.name_single END "uom"
-FROM products p 
-JOIN products_ingredients pi ON p.id = pi.product_id 
-JOIN ingredients ing ON ing.id = pi.ingredient_id 
-JOIN uom u ON u.id = pi.uom_id
-WHERE p.id = 1;
-*/
-
-/* COMPLETE
-SELECT ing.name "ingredient", pi.quantity "quantity", 
-CASE WHEN pi.quantity > 1.0 THEN u.name_plural ELSE u.name_single END "uom"
-FROM products p 
-JOIN products_ingredients pi ON p.id = pi.product_id 
-JOIN ingredients ing ON ing.id = pi.ingredient_id 
-JOIN uom u ON u.id = pi.uom_id
-WHERE p.id = 1;
-*/

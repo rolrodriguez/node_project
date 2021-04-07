@@ -50,7 +50,7 @@ query.getProductById = (id) => {
           var product = result.rows[0];
           if (product){
               const stmt = 
-              'SELECT ing.name "name", pi.quantity "quantity", '+ 
+              'SELECT pi.id "pi_id", ing.name "name", pi.quantity "quantity", '+ 
               'CASE WHEN pi.quantity > 1.0 THEN u.name_plural ELSE u.name_single END "uom", '+
               `pi.quantity || CASE WHEN abbr = 'ea' THEN ' ' ELSE CASE WHEN pi.quantity > 1.0 ` +
               `THEN ' ' || u.name_plural || ' ' ELSE `+
@@ -96,7 +96,7 @@ query.getLatestProducts = (number) => {
           var products = result.rows;
           if (products){
             const stmt = 
-              'SELECT ing.name "name", pi.quantity "quantity", '+ 
+              'SELECT pi.id "pi_id", ing.name "name", pi.quantity "quantity", '+ 
               'CASE WHEN pi.quantity > 1.0 THEN u.name_plural ELSE u.name_single END "uom", '+
               `pi.quantity || CASE WHEN abbr = 'ea' THEN ' ' ELSE CASE WHEN pi.quantity > 1.0 ` +
               `THEN ' ' || u.name_plural || ' ' ELSE `+
@@ -273,6 +273,15 @@ query.deleteProduct = (id)=>{
   })
 }
 
+query.deleteIngredientFromProduct = (productID)=>{
+  return new Promise ((resolve, reject)=>{
+    query.psqlQuery('DELETE FROM products_ingredients WHERE id = $1', [productID])
+    .then((result)=>{
+      resolve(result);
+    }).catch((error)=>{ reject(error) });
+  });
+}
+
 query.deleteUOM = (id)=>{
   return new Promise((resolve, reject)=>{
     query.psqlQuery('DELETE FROM unit_cost WHERE uom_id = $1', [id])
@@ -293,6 +302,14 @@ query.createUOM = (abbr, name_single, name_plural)=>{
     query.psqlQuery(`INSERT INTO uom (abbr, name_single, name_plural) VALUES ($1, $2, $3)`, [abbr, name_single, name_plural])
     .then(result=>{resolve(result)})
     .catch((error)=>{reject(error)});
+  });
+}
+
+query.addIngredientToProduct = (productID, ingredientID, uomID, quantity)=>{
+  return new Promise((resolve, reject)=>{
+    query.psqlQuery('INSERT INTO products_ingredients (product_id, ingredient_id, uom_id, quantity) VALUES ($1, $2, $3, $4)', [productID, ingredientID, uomID, quantity])
+    .then(result=>resolve(result))
+    .catch((error)=>reject(error))
   });
 }
 

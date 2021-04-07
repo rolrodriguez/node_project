@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const query = require('./queries');
 const edaman = require('./edaman');
+const formidable = require('formidable');
 router.get('/product/:id', async (req, res)=>{
     try {
         const id = req.params.id;
@@ -10,6 +11,42 @@ router.get('/product/:id', async (req, res)=>{
     } catch (error) {
         console.error(error);
     } 
+});
+
+router.post('/product/ingredient/', async(req, res)=>{
+    const productID = req.body.productID;
+    const ingredientID = req.body.ingredientID;
+    const uomID = req.body.uomID;
+    const quantity = req.body.quantity;
+
+    try {
+        const result = await query.addIngredientToProduct(productID, ingredientID, uomID, quantity);
+        const confirmation = await query.getProductById(productID);
+        res.json(confirmation);
+    } catch (error) {
+        console.error(error);
+    }
+
+});
+
+router.delete('/product/ingredient/:id', async (req, res)=>{
+    const id = req.params.id;
+
+    if (id){
+        try{
+            const result = await query.deleteIngredientFromProduct(id);
+            if (result.rowCount != 0){
+                res.json({message: "resource deleted"});    
+            }
+            else{
+                res.json({message: "resource was not found"});  
+            }
+        }catch(error){
+            console.log(error);
+        }
+        
+    }
+    res.json({message: "parameters passed are not valid"})
 });
 
 router.delete('/product/:id', async (req, res)=>{
@@ -197,6 +234,10 @@ router.delete('/uom/:id', async (req, res)=>{
         console.error(error);
     }
 });
+
+router.post('/product/', (req, res)=>{
+    const form = formidable({multiples: false, uploadDir: "/public/img/", maxFileSize: 10*1024*1024});
+})
 
 router.post('/recipe/', async (req, res) => {
     try {
