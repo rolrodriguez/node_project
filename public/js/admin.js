@@ -2,6 +2,26 @@ import lib from './lib.js';
 
 let newIngredientBtn = document.querySelector('.round-btn');
 
+
+const postForm = async(endpoint)=>{
+  let image = document.querySelector('#lb-recipe-img').files[0];
+  let title = document.querySelector('#lb-recipe-title');
+  let desc = document.querySelector('#lb-recipe-desc');
+  let formData = new FormData();
+  formData.append('img', image);
+  formData.append('title', title.value);
+  formData.append('desc', desc.value)
+  console.log(formData);
+  try {
+    let result = await fetch(endpoint, {
+      method: "POST",
+      body: formData
+    })
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 const hideMainButtons = ()=>{
     let buttons = document.querySelectorAll('.main-button');
     buttons.forEach(elem =>{
@@ -22,14 +42,33 @@ const admin_listRecipes = async ()=>{
     admin_printRecipes(list, '#content');
 }
 
+const admin_listIngredients = async ()=>{
+  hideMainButtons();
+  const list = await lib.getFromAPI('/api/ingredients/', '');
+  admin_printIngredients(list, '#content');
+}
+
+const admin_listUOMs = async ()=>{
+  hideMainButtons();
+  const list = await lib.getFromAPI('/api/uoms/', '');
+  admin_printUOMS(list, '#content');
+}
+
 const admin_printRecipes = (results, parentSelector) =>{
     let parent = document.querySelector(parentSelector);
-    parent.innerHTML = '<h2>Published Recipes</h2>';
+    parent.innerHTML = '';
+    let flexCont = document.createElement('div');
+    flexCont.id = 'flex-cont';
+    parent.appendChild(flexCont);
+    flexCont.innerHTML = '<h2>Published Recipes</h2>';
+    
     let createRecipe = document.createElement('button');
+    createRecipe.onclick = newRecipeForm;
     createRecipe.innerText = "Add New";
     createRecipe.classList.add('btn');
-    createRecipe.onclick = newRecipeForm;
-    parent.appendChild(createRecipe);
+    flexCont.appendChild(createRecipe);
+    
+    
     results.forEach(elem =>{
       let nodeRow = document.createElement('div');
       nodeRow.classList.add('admin-row');
@@ -44,29 +83,30 @@ const admin_printRecipes = (results, parentSelector) =>{
       let nodeID = document.createElement('div');
       nodeID.classList.add('admin-field');
       nodeID.classList.add('admin-id');
-      nodeID.innerText = elem['id'];
+      nodeID.innerText = "ID: "+elem['id'];
   
       // Name
       let nodeName = document.createElement('div')
       nodeName.classList.add('admin-field');
       nodeName.classList.add('admin-name');
+      nodeName.innerText = "NAME: "+elem.name;
       nodeName.onclick = ()=>{
         getProductDetailView(elem['id'], parentSelector);
       }
-
+      
       // Edit
 
       let nodeEdit = document.createElement('div');
       nodeEdit.classList.add('admin-edit');
-      nodeEdit.innerText = "Edit";
+      nodeEdit.innerHTML = '<i class="fa fa-edit">';
       nodeEdit.onclick = ()=>{
-        console.log('EDIT!!!');
+        editRecipeForm(elem['id']);
       }
     
       // Delete
       let nodeDelete = document.createElement('div');
       nodeDelete.classList.add('admin-delete');
-      nodeDelete.innerText = "Delete";
+      nodeDelete.innerHTML = '<i class="fa fa-trash">';
       nodeDelete.onclick = ()=>{
         swal({
             title: "Do you want to delete this product?",
@@ -83,9 +123,7 @@ const admin_printRecipes = (results, parentSelector) =>{
             } 
         });
       }
-
-      nodeName.innerText = elem.name;
-     
+           
       nodeRow.appendChild(nodeImg);
       nodeRow.appendChild(nodeID);
       nodeRow.appendChild(nodeName);
@@ -93,9 +131,156 @@ const admin_printRecipes = (results, parentSelector) =>{
       nodeRow.appendChild(nodeDelete);
       parent.appendChild(nodeRow);
     });
+    
   }
 
 admin_listRecipes();
+
+const admin_printIngredients = (results, parentSelector) =>{
+  let parent = document.querySelector(parentSelector);
+  parent.innerHTML = '';
+  let flexCont = document.createElement('div');
+  flexCont.id = 'flex-cont';
+  parent.appendChild(flexCont);
+  flexCont.innerHTML = '<h2>Published Ingredients</h2>';
+  let createRecipe = document.createElement('button');
+  createRecipe.innerText = "Add New";
+  createRecipe.classList.add('btn');
+  createRecipe.onclick = newIngredientForm;
+  flexCont.appendChild(createRecipe);
+  
+  let elems = results.results;
+  if(elems){
+  elems.forEach(elem =>{
+    let nodeRow = document.createElement('div');
+    nodeRow.classList.add('admin-row-other');
+
+    // Name
+    let nodeName = document.createElement('div')
+    nodeName.classList.add('admin-field');
+    nodeName.classList.add('admin-desc');
+    nodeName.innerText = "NAME: "+elem.name;
+    
+    // Description
+    let nodeDesc = document.createElement('div');
+    nodeDesc.classList.add('admin-field');
+    nodeDesc.classList.add('admin-desc');
+    nodeDesc.innerText = "DESCRIPTION: "+elem['description'];
+
+    // Edit
+
+    let nodeEdit = document.createElement('div');
+    nodeEdit.classList.add('admin-edit');
+    nodeEdit.innerHTML = '<i class="fa fa-edit">';
+    nodeEdit.onclick = ()=>{
+      editIngredientForm(elem['id']);
+    }
+  
+    // Delete
+    let nodeDelete = document.createElement('div');
+    nodeDelete.classList.add('admin-delete');
+    nodeDelete.innerHTML = '<i class="fa fa-trash">';
+    nodeDelete.onclick = ()=>{
+      swal({
+          title: "Do you want to delete this ingredient?",
+          icon: "warning",
+          buttons: true,
+          dangerMode: true,
+        })
+        .then((willDelete) => {
+          if (willDelete) {
+              lib.deleteFromAPI('/api/ingredient/'+elem['id'])
+              .then(()=>{
+                  admin_listIngredients();
+              });
+          } 
+      });
+    }
+       
+    nodeRow.appendChild(nodeName);
+    nodeRow.appendChild(nodeDesc);
+    nodeRow.appendChild(nodeEdit);
+    nodeRow.appendChild(nodeDelete);
+    parent.appendChild(nodeRow);
+  });
+}
+}
+
+const admin_printUOMS = (results, parentSelector) =>{
+  let parent = document.querySelector(parentSelector);
+  parent.innerHTML='';
+  let flexCont = document.createElement('div');
+  flexCont.id = 'flex-cont';
+  parent.appendChild(flexCont);
+  flexCont.innerHTML = '<h2>Published Units of Measure</h2>';
+  let createRecipe = document.createElement('button');
+  createRecipe.innerText = "Add New";
+  createRecipe.classList.add('btn');
+  createRecipe.onclick = newUOMForm;
+  flexCont.appendChild(createRecipe);
+
+  results.forEach(elem =>{
+    let nodeRow = document.createElement('div');
+    nodeRow.classList.add('admin-row-other');
+
+    // Abbr
+    let abbr = document.createElement('div')
+    abbr.classList.add('admin-field');
+    abbr.classList.add('admin-desc');
+    abbr.innerText = "ABBR: "+elem.abbr;
+    
+    // Name Single
+    let nameSingle = document.createElement('div');
+    nameSingle.classList.add('admin-field');
+    nameSingle.classList.add('admin-desc');
+    nameSingle.innerText = "SINGLE NAME: "+elem['name_single'];
+
+    // Name Plural
+
+    let namePlural = document.createElement('div');
+    namePlural.classList.add('admin-field');
+    namePlural.classList.add('admin-desc');
+    namePlural.innerText = "PLURAL NAME: "+elem['name_plural'];
+
+    // Edit
+
+    let nodeEdit = document.createElement('div');
+    nodeEdit.classList.add('admin-edit');
+    nodeEdit.innerHTML = '<i class="fa fa-edit">';
+    nodeEdit.onclick = ()=>{
+      editUOMForm(elem['id']);
+    }
+  
+    // Delete
+    let nodeDelete = document.createElement('div');
+    nodeDelete.classList.add('admin-delete');
+    nodeDelete.innerHTML = '<i class="fa fa-trash">';
+    nodeDelete.onclick = ()=>{
+      swal({
+          title: "Do you want to delete this unit of measure?",
+          icon: "warning",
+          buttons: true,
+          dangerMode: true,
+        })
+        .then((willDelete) => {
+          if (willDelete) {
+              lib.deleteFromAPI('/api/uom/'+elem['id'])
+              .then(()=>{
+                  admin_listUOMs();
+              });
+          } 
+      });
+    }
+       
+    nodeRow.appendChild(abbr);
+    nodeRow.appendChild(nameSingle);
+    nodeRow.appendChild(namePlural);
+    nodeRow.appendChild(nodeEdit);
+    nodeRow.appendChild(nodeDelete);
+    parent.appendChild(nodeRow);
+  });
+  
+}
 
 const getProductDetailView = async (id, parentSelector) =>{
     let linkToMain = document.createElement('div');
@@ -167,7 +352,7 @@ newIngredientBtn.onclick = async () =>{
     '<label for="lb-unit">Unit</label>'+
     `<select id="lb-unit" name="lb-unit">${uomsString}</select>`+
     '<label>ingredient: </label><span id="lb-ingr"></span>'+
-    '<br/><button class="search-submit" id="lb-add">Add</button></aside>'+
+    '<button class="search-submit" id="lb-add">Add</button></aside>'+
     '<div id="lb-results"><div></div></div>'
     SimpleLightbox.open({
       content: html,
@@ -242,17 +427,234 @@ const printListIng = (results, parentSelector) =>{
 }
 
 /**
- * New Recipe Form
+ * Forms
  */
 
 const newRecipeForm = ()=>{
-    let html = '<div id="lb-container"><form enctype="multipart/form-data"><label for="lb-recipe-title">Title:</label>'+
-    '<input type="text" name="lb-recipe-title" id="lb-recipe-title" /><label for="lb-recipe-img">Image:</label><input type="file" name="lb-recipe-img" id="name="lb-recipe-img"/><input type="submit" /></form></div>'
+
+    let html = '<div id="lb-container"><form enctype="multipart/form-data" method="POST"><label for="lb-recipe-title">Title:</label>'+
+    '<input type="text" name="lb-recipe-title" id="lb-recipe-title" /><label for="lb-recipe-desc">Description</label>'+
+    '<input type="text" name="lb-recipe-desc" id="lb-recipe-desc"><label for="lb-recipe-img">Image:</label>'+
+    '<input type="file" name="lb-recipe-img" id="lb-recipe-img"/><input type="submit" id="lb-recipe-submit" value="Send" /></form></div>'
     SimpleLightbox.open({
       content: html,
       elementClass: 'slbContentEl',
       beforeClose: ()=>{
-        getProductDetailView(document.querySelector('#content').dataset.id,'#content');
+        admin_listRecipes();
       }
     });
+    let submitButton = document.querySelector('#lb-recipe-submit');
+    submitButton.parentElement.onsubmit = (e)=>{
+      e.preventDefault();
+      postForm('/api/product/').then(()=>{
+        swal({
+          title: "The product was created",
+          icon: "success",
+        })
+      })
+      .catch((error)=>{
+        swal({
+          title: "There was an error",
+          icon: "failure",
+        })
+      });
+    }
 }
+
+const editRecipeForm = (id)=>{
+  
+  let html = `<div id="lb-container" data-id="${id}"><form enctype="multipart/form-data" method="POST"><label for="lb-recipe-title">Title:</label>`+
+  '<input type="text" name="lb-recipe-title" id="lb-recipe-title" /><label for="lb-recipe-desc">Description</label>'+
+  '<input type="text" name="lb-recipe-desc" id="lb-recipe-desc">'+
+  '<input type="submit" id="lb-recipe-submit" value="Send" /></form></div>'
+  SimpleLightbox.open({
+    content: html,
+    elementClass: 'slbContentEl',
+    beforeClose: ()=>{
+      admin_listRecipes();
+    }
+  });
+  
+  let submitButton = document.querySelector('#lb-recipe-submit');
+  let name = document.querySelector('#lb-recipe-title');
+  let desc = document.querySelector('#lb-recipe-desc');
+  let elemID = document.querySelector('#lb-container').dataset.id;
+  lib.getFromAPI(`/api/product/`, elemID).then((data)=>{
+    name.value = data.name;
+    desc.value = data.description;
+  });
+  // name.value = data.title;
+  // desc.value = data.description;
+  submitButton.parentElement.onsubmit = (e)=>{
+    e.preventDefault();
+    lib.putToAPI(`/api/product/${elemID}`, {name: name.value, desc: desc.value}).then(()=>{
+      swal({
+        title: "The product was updated",
+        icon: "success",
+      })
+    })
+    .catch((error)=>{
+      swal({
+        title: "There was an error",
+        icon: "error",
+      })
+    });
+  }
+}
+
+const newIngredientForm = ()=>{
+  let html = `<div id="lb-container"><form method="POST"><label for="lb-ingredient-name">Name:</label>`+
+  '<input type="text" name="lb-ingredient-name" id="lb-ingredient-name" /><label for="lb-ingredient-desc">Description</label>'+
+  '<input type="text" name="lb-ingredient-desc" id="lb-ingredient-desc">'+
+  '<input type="submit" id="lb-ingredient-submit" value="Send" /></form></div>'
+  SimpleLightbox.open({
+    content: html,
+    elementClass: 'slbContentEl',
+    beforeClose: ()=>{
+      admin_listIngredients();
+    }
+  });
+  let submitButton = document.querySelector('#lb-ingredient-submit');
+  let name = document.querySelector('#lb-ingredient-name');
+  let desc = document.querySelector('#lb-ingredient-desc');
+
+  submitButton.parentElement.onsubmit = (e)=>{
+    e.preventDefault();
+    lib.postToAPI(`/api/ingredient/`, {name: name.value, description: desc.value}).then(()=>{
+      swal({
+        title: "The ingredient was created",
+        icon: "success",
+      })
+    })
+    .catch((error)=>{
+      swal({
+        title: "There was an error",
+        icon: "error",
+      })
+    });
+  }
+}
+
+const editIngredientForm = (id)=>{
+  let html = `<div id="lb-container" data-id="${id}"><form method="POST"><label for="lb-ingredient-name">Name:</label>`+
+  '<input type="text" name="lb-ingredient-name" id="lb-ingredient-name" /><label for="lb-ingredient-desc">Description</label>'+
+  '<input type="text" name="lb-ingredient-desc" id="lb-ingredient-desc">'+
+  '<input type="submit" id="lb-ingredient-submit" /></form></div>'
+  SimpleLightbox.open({
+    content: html,
+    elementClass: 'slbContentEl',
+    beforeClose: ()=>{
+      admin_listIngredients();
+    }
+  });
+  let submitButton = document.querySelector('#lb-ingredient-submit');
+  let name = document.querySelector('#lb-ingredient-name');
+  let desc = document.querySelector('#lb-ingredient-desc');
+  let elemID = document.querySelector('#lb-container').dataset.id;
+  lib.getFromAPI(`/api/ingredient/`, elemID).then((data)=>{
+    name.value = data.name;
+    desc.value = data.description;
+  });
+
+  submitButton.parentElement.onsubmit = (e)=>{
+    e.preventDefault();
+    lib.putToAPI(`/api/ingredient/${elemID}`, {name: name.value, description: desc.value}).then(()=>{
+      swal({
+        title: "The ingredient was updated",
+        icon: "success",
+      })
+    })
+    .catch((error)=>{
+      swal({
+        title: "There was an error",
+        icon: "error",
+      })
+    });
+  }
+}
+
+const newUOMForm = ()=>{
+  let html = `<div id="lb-container"><form method="POST"><label for="lb-uom-abbr">Abbreviation: </label>`+
+  '<input type="text" name="lb-uom-abbr" id="lb-uom-abbr" /><label for="lb-uom-name-single">Single Name: </label>'+
+  '<input type="text" name="lb-uom-name-single" id="lb-uom-name-single"><label for="lb-uom-name-plural">Plural Name: </label>'+
+  '<input type="text" name="lb-uom-name-plural" id="lb-uom-name-plural"><input type="submit" id="lb-uom-submit" /></form></div>'
+  SimpleLightbox.open({
+    content: html,
+    elementClass: 'slbContentEl',
+    beforeClose: ()=>{
+      admin_listUOMs();
+    }
+  });
+  let submitButton = document.querySelector('#lb-uom-submit');
+  let abbr = document.querySelector('#lb-uom-abbr');
+  let nameSingle = document.querySelector('#lb-uom-name-single');
+  let namePlural = document.querySelector('#lb-uom-name-plural');
+
+  submitButton.parentElement.onsubmit = (e)=>{
+    e.preventDefault();
+    lib.postToAPI(`/api/uom/`, {abbr: abbr.value, name_single: nameSingle.value, name_plural: namePlural.value}).then(()=>{
+      swal({
+        title: "The unit of measure was created",
+        icon: "success",
+      })
+    })
+    .catch((error)=>{
+      swal({
+        title: "There was an error",
+        icon: "error",
+      })
+    });
+  }
+}
+
+const editUOMForm = (id)=>{
+  let html = `<div id="lb-container" data-id="${id}"><form method="POST"><label for="lb-uom-abbr">Abbreviation: </label>`+
+  '<input type="text" name="lb-uom-abbr" id="lb-uom-abbr" /><label for="lb-uom-name-single">Single Name: </label>'+
+  '<input type="text" name="lb-uom-name-single" id="lb-uom-name-single"><label for="lb-uom-name-plural">Plural Name: </label>'+
+  '<input type="text" name="lb-uom-name-plural" id="lb-uom-name-plural"><input type="submit" id="lb-uom-submit" /></form></div>'
+  SimpleLightbox.open({
+    content: html,
+    elementClass: 'slbContentEl',
+    beforeClose: ()=>{
+      admin_listUOMs();
+    }
+  });
+  let submitButton = document.querySelector('#lb-uom-submit');
+  let abbr = document.querySelector('#lb-uom-abbr');
+  let nameSingle = document.querySelector('#lb-uom-name-single');
+  let namePlural = document.querySelector('#lb-uom-name-plural');
+  let elemID = document.querySelector('#lb-container').dataset.id;
+  lib.getFromAPI(`/api/uom/`, elemID).then((data)=>{
+    abbr.value = data.abbr;
+    nameSingle.value = data.name_single;
+    namePlural.value = data.name_plural;
+  });
+
+  submitButton.parentElement.onsubmit = (e)=>{
+    e.preventDefault();
+    lib.putToAPI(`/api/uom/${elemID}`, {abbr: abbr.value, name_single: nameSingle.value, name_plural: namePlural.value}).then(()=>{
+      swal({
+        title: "The unit of measure was updated",
+        icon: "success",
+      })
+    })
+    .catch((error)=>{
+      swal({
+        title: "There was an error",
+        icon: "error",
+      })
+    });
+  }
+}
+
+/**
+ * Menu items listeners
+ */
+
+let menuProductsItem = document.querySelector('#menu-products');
+let menuIngredientsItem = document.querySelector('#menu-ingredients');
+let menuUOMSItem = document.querySelector('#menu-uoms');
+
+menuProductsItem.onclick = admin_listRecipes;
+menuIngredientsItem.onclick = admin_listIngredients;
+menuUOMSItem.onclick = admin_listUOMs;

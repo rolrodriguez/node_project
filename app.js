@@ -14,7 +14,6 @@ const morgan = require('morgan');
 // Express Routers
 const api = require('./controllers/api');
 const webapp = require('./controllers/webapp');
-// const admin = require('./controllers/admin');
 
 // Path
 const path = require('path');

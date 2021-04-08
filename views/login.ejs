@@ -5,14 +5,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Amai Bakery Admin Login</title>
+    <!-- Site CSS  -->
+    <link rel="stylesheet" href="/css/admin.css">
 </head>
 <body>
-    <form action="/login" method="POST">
-    <label for="username">Username:</label>
-    <input type="text" name="username" id="username">
-    <label for="password">Password:</label>
-    <input type="password" name="password" id="password">
-    <input type="submit" value="Login">
-    </form>
+    <div id="login-box">
+        <form action="/login" method="POST">
+        <label for="username">Username:</label>
+        <input type="text" name="username" id="username">
+        <label for="password">Password:</label>
+        <input type="password" name="password" id="password">
+        <input type="submit" value="Login">
+        </form>
+    </div>
 </body>
 </html>

@@ -7,27 +7,400 @@
 }
 
 html{
-    font-size: 62.5%;
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+  font-size: 62.5%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body{
+  margin: inherit;
+  padding: inherit;
+  height: 100vh;
+  user-select: none;
+  /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#362ecc+0,737096+0,000080+100 */
+  background: #362ecc; /* Old browsers */
+  background: -moz-linear-gradient(-45deg,  #362ecc 0%, #737096 0%, #000080 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(-45deg,  #362ecc 0%,#737096 0%,#000080 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(135deg,  #362ecc 0%,#737096 0%,#000080 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#362ecc', endColorstr='#000080',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+*, *::before, *::after{
+  box-sizing: inherit;
 }
 
+.center{
+  text-align: center;
+}
+
+#inputElements{
+  display: grid;
+  grid-template-columns: 40% 40%;
+  justify-content: center;
+}
+form{
+  display: flex;
+  flex-direction: column;
+}
+
+form input[type="submit"]{
+  padding: 1rem 1.7rem;
+  margin: 2rem auto;
+  background-color: var(--colors-primary);
+  border: none;
+  color: white;
+  font-size: 1.8rem;
+  border-radius: 0.5rem;
+  font-weight: 700;
+}
+
+form input[type="submit"]:hover{
+  background-color: var(--colors-focus);
+  color: black;
+}
+
+form label{
+  font-size: 1.6rem;
+  color: rgb(102, 101, 101);
+}
+
+form *{
+  margin: 1rem;
+  font-family: 'Open Sans', sans-serif;
+}
+.container{
+  max-width: 96rem;
+  min-width: 75rem;
+  margin: 0 auto;
+  border: 1px solid gray;
+  background-color: white;
+}
+
+a:visited, a{
+  text-decoration: none;
+  color: var(--colors-primary);
+  font-size: 2rem;
+}
+#flex-cont{
+  display: grid;
+  grid-template-columns: 90% 10%;
+}
+
+#flex-cont button{
+  padding: 0.5rem;
+  justify-self: center;
+  align-self: center;
+  font-size: 1rem;
+}
+
+h1{
+  font-size: 2.8rem;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 700;
+  background-color: white;
+  color: var(--colors-primary);
+  margin: 0;
+  padding: 0 2rem;
+  text-align: center;
+}
+
+nav{
+  height: 100%;
+  background-color: var(--colors-secundary);
+}
+
+nav ul{
+  margin: 0.1rem 0;
+  padding: 0;
+}
+
+nav ul li{
+  list-style-type: none;
+  text-decoration: none;
+  display: inline;
+  font-size: 2rem;
+  padding: 0rem 2rem;
+  margin: 0;
+  border-right: 1px solid white;
+  color: white;
+}
+
+nav ul li:hover{
+  cursor: pointer;
+  color: var(--colors-focus);
+}
+
+nav ul li:last-of-type{
+  border-right: none;
+}
+
+h2{
+  font-size: 2.4rem;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 500;
+  color: var(--colors-primary);
+  text-align: center;
+}
+
+h3{
+  font-size: 2.2rem;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 700;
+  color: var(--colors-primary);
+  text-align: center;
+}
+.result{
+  text-align: center;
+  font-size: 2.8rem;
+}
+
+.weight{
+  font-size: 3.8rem;
+  color: var(--colors-focus);
+}
+.cost{
+  font-size: 4.5rem;
+  color: var(--colors-primary);
+}
+
+
+.search{
+  border: none;
+  border-bottom: none;
+}
+
+.search-box{
+  padding: 1rem;
+  border: 1px solid gray;
+  text-align: center;
+  background-color: var(--colors-secundary);
+  color: white;
+}
+.search-submit{
+  padding: 0.6rem 0.8rem;
+  position: relative;
+  top: 1px;
+  background-color: white;
+  border: 1px solid var(--colors-primary);
+  color: var(--colors-primary);
+  margin-left: 1rem;
+}
+
+.search-submit:active, #lb-add:active{
+ background-color: var(--colors-secundary);
+ color: white;
+}
+
+.search-bar{
+  border: 1px solid gray;
+  width: inherit;
+  background-color: white;
+  display: inline;
+  padding: 0.7rem;
+  height: 100%;
+}
+#search:focus, #search-recipe:focus{
+  outline: none;
+}
+
+#search, #search-recipe{
+  width: 40%;
+  height: 2rem;
+}
+
+.fa-search{
+  color: var(--colors-dark-gray);
+  font-size: 1.2rem;
+}
+
+.fa-arrow-circle-left{
+  color: var(--colors-secundary);
+}
+
+
+
 .float-button{
-    position: fixed;
-    right: 4rem;
-    bottom: 4rem;
-    display: none;
+  position: fixed;
+  right: 4rem;
+  bottom: 4rem;
+  display: none;
 }
 .round-btn{
-   background-color: var(--colors-secundary); 
-   color: white;
-   padding: 1.5rem 2rem;
-   border-radius: 2.5rem;
-   font-size: 2rem;
-   cursor: pointer;
-   user-select: none;
+  background-color: var(--colors-secundary); 
+  color: white;
+  padding: 1.5rem 2rem;
+  border-radius: 2.5rem;
+  font-size: 2rem;
+  cursor: pointer;
+  user-select: none;
 }
 .round-btn:hover{
   background-color: var(--colors-focus);
+}
+
+.report-button{
+  position: fixed;
+  right: 10rem;
+  bottom: 4rem;
+  display: none;
+}
+
+.report-btn{
+  background-color: var(--colors-secundary); 
+  color: white;
+  padding: 1.8rem 1.8rem;
+  border-radius: 2.5rem;
+  font-size: 1.5rem;
+  cursor: pointer;
+  user-select: none;
+}
+.report-btn:hover{
+  background-color: var(--colors-focus);
+}
+
+main{
+  min-height: 680px;
+  overflow: hidden;
+}
+
+@media all and (max-width: 800px){
+  main{
+    margin: 5%;
+  }
+}
+
+
+footer{
+  font-size: 1.6rem;
+  text-align: center;
+  background-color: var(--colors-secundary);
+  color: white;
+}
+
+#content{
+  padding: 0 1.5rem;
+}
+
+.admin-delete, .admin-edit{
+  align-self: flex-end;
+  padding: 1rem;
+}
+
+.admin-delete:hover{
+  color: red;
+}
+
+.admin-edit:hover{
+  color: var(--colors-focus);
+}
+.admin-row{
+  display: flex;
+  font-size: 2.5rem;
+  padding: 1rem;
+  border: 1px solid var(--colors-dark-gray);
+  margin: 0.4rem 0;
+}
+
+.admin-row-other{
+  font-size: 2.5rem;
+  padding: 1rem;
+  border: 1px solid var(--colors-dark-gray);
+  margin: 0.4rem 0;
+}
+
+.admid-row div{
+  display: block;
+}
+
+.admin-field{
+  padding: 1rem;
+}
+
+.admin-img{
+  width: 120px;
+  height: 120px;
+}
+
+.admin-id::before{
+  content: '#';
+  font-weight: bold;
+}
+
+.admin-name{
+  user-select: none;
+  text-transform: capitalize;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 500;
+  color: var(--colors-primary);
+}
+.admin-name:hover{
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.ingredient-row{
+  display: flex;
+  font-size: 1.8rem;
+  margin: 0 6rem;
+  border: 1px solid black;
+  margin-bottom: 0.5rem;
+  font-family: 'Open Sans', sans-serif;
+}
+.ingredient-row *{
+  margin: 0;
+  padding: 1rem;
+
+}
+
+.ingredient-row:hover{
+  background-color: #6e68e2;
+  color: white;
+}
+
+.return-to-main{
+  text-align: center;
+  font-size: 1.6rem;
+  cursor: pointer;
+  text-decoration: underline;
+  margin: 2rem;
+}
+
+.return-to-main:hover *{
+  color: var(--colors-focus);
+}
+
+.slbContent{
+  width: 50vw;
+  padding: 3rem;
+}
+
+h4{
+  text-decoration: none;
+  color: var(--colors-focus);
+  text-align: center;
+}
+
+h4:hover{
+  color: var(--colors-secundary);
+}
+
+h2 a:hover{
+  color: var(--colors-focus);
+}
+
+#login-box{
+  padding-top: 3rem;
+  width: 50%;
+  margin: 0 auto;
+}
+
+#login-box *{
+ color: white;
+}
+
+.result-row{
+  display: flex;
+  font-size: 2.5rem;
+  padding: 1rem;
+  border: 1px solid var(--colors-dark-gray);
+  margin: 0.4rem 0;
 }

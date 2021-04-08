@@ -38,11 +38,27 @@ query.userIdExists = (userID) =>{
   
 }
 
+query.createProduct = (name, description, image)=>{
+  return new Promise((resolve, reject)=>{
+    query.psqlQuery(`INSERT INTO products (name, description, image) VALUES ($1, $2, $3)`, [name, description, image])
+    .then(result=>{resolve(result)})
+    .catch((error)=>{reject(error)});
+  });
+}
+
+query.updateProduct = (id, name, desc)=>{
+  return new Promise((resolve, reject)=>{
+    query.psqlQuery(`UPDATE products SET name = $2, description = $3, modified_on = NOW() WHERE id = $1`, [id, name, desc])
+    .then(result=>{resolve(result)})
+    .catch((error)=>{reject(error)});
+  });
+}
+
 query.getProductById = (id) => {
   return new Promise((resolve, reject)=>{
     pool.connect((err, client, done) => {
       if (err) throw err
-      client.query('SELECT id, name, image from products WHERE id = $1', [id],(err, result) => {
+      client.query('SELECT id, name, description, image from products WHERE id = $1', [id],(err, result) => {
         done();
         if (err) {
           reject(err.stack);
@@ -88,7 +104,7 @@ query.getLatestProducts = (number) => {
   return new Promise((resolve, reject)=>{
     pool.connect((err, client, done) => {
       if (err) throw err
-      client.query('SELECT id, name, image from products ORDER BY created_on DESC LIMIT $1', [number], async (err, result) => {
+      client.query('SELECT id, name, description, image from products ORDER BY created_on DESC LIMIT $1', [number], async (err, result) => {
         done();
         if (err) {
           reject(err.stack);
@@ -141,7 +157,7 @@ query.searchProductsByName = (nameString) =>{
   return new Promise((resolve, reject)=>{
       pool.connect((err, client, done) => {
         if (err) throw err
-        client.query('SELECT id, name, image from products WHERE name LIKE $1::text', [`%${nameString}%`],(err, result) => {
+        client.query('SELECT id, name, description, image from products WHERE UPPER(name) LIKE $1::text', [`%${nameString.toUpperCase()}%`],(err, result) => {
           done();
           if (err) {
             reject(err.stack);
@@ -160,7 +176,7 @@ query.searchIngredientsByName = (nameString) =>{
   return new Promise((resolve, reject)=>{
     pool.connect((err, client, done)=>{
       if(err) throw err
-      client.query('SELECT id, name, description from ingredients WHERE name LIKE $1::text', [`%${nameString}%`],(err, result) => {
+      client.query('SELECT id, name, description from ingredients WHERE UPPER(name) LIKE $1::text', [`%${nameString.toUpperCase()}%`],(err, result) => {
         done();
         if (err) {
           reject(err.stack);
@@ -320,6 +336,7 @@ query.createIngredient = (name, description)=>{
     .catch((error)=>{reject(error)});
   });
 }
+
 
 query.updateUOM = (id, abbr, name_single, name_plural)=>{
   return new Promise((resolve, reject)=>{
