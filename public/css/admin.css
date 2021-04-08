@@ -397,6 +397,10 @@ h2 a:hover{
  color: white;
 }
 
+#login-box input {
+  color: black;
+}
+
 .result-row{
   display: flex;
   font-size: 2.5rem;
