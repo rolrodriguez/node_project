@@ -397,7 +397,7 @@ h2 a:hover{
  color: white;
 }
 
-#login-box input {
+#login-box input[text] {
   color: black;
 }
 
